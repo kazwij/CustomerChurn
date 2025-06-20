@@ -1,0 +1,60 @@
+import pandas as pd
+import sys
+import numpy as np
+import os
+'''
+Defining common constant variable for training pipeline
+'''
+TARGET_COLUMN = "Existed" # get from raw data columns
+PIPELINE_NAME:str = "Churndata"
+ARTIFACT_DIR:str = "Artifacts"
+FILE_NAME:str = "Churn_Modelling.csv"
+
+TRAIN_FILE_NAME :str = "train.csv"
+TEST_FILE_NAME:str = "test.csv"
+
+SCHEMA_FILE_PATH = os.path.join("data_schema","schema.yaml")
+
+SAVED_MODEL_DIR:str = os.path.join("saved_model")
+MODEL_FILE_NAME:str = "model1.pkl"
+
+'''
+Data Ingestion related constant - start with DATA_INGESTION ....
+
+'''
+
+DATA_INGESTION_COLLECTION_NAME:str = "Churndata"
+DATA_INGESTION_DATABASE_NAME:str = "customer_churn"
+DATA_INGESTION_DIR_NAME:str = "data_ingestion"
+DATA_INGESTION_FEATURE_STORE_DIR:str = "feature_store"
+DATA_INGESTION_INGESTED_DIR:str = "ingested"
+DATA_INGESTION_TRAIN_TEST_SPLIT_RATIO:float = 0.2
+
+'''
+Data Validation related Constants - start with DATA_VALIDATION VAR NAME
+'''
+
+DATA_VALIDATION_DIR_NAME:str = "data_validation"
+DATA_VALIDATION_VALID_DIR:str = "validated"
+DATA_VALIDATION_INVALID_DIR:str = "invalid"
+DATA_VALIDATION_DRIFT_REPORT_DIR:str = "drift_report"
+DATA_VALIDATION_DRIFT_REPORT_FILE_NAME:str ="report.yaml"
+PREPROCESSING_OBJECT_FILE_NAME= "preprocessing.pkl"
+
+
+'''
+Data Trasnformation related constant - start with DATA_TRANSFORMATION VAR NAME
+'''
+
+DATA_TRANSFORMATION_DIR_NAME:str = "data_transformation"
+DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR:str = "transformed"
+DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR:str = "transformed_object"
+
+
+## KNN imputer parameters
+
+DATA_TRANSFORMATION_IMPUTER_PARAMS:dict = {
+    "strategy":"most_frequent"
+    
+    
+}
