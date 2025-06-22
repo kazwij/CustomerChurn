@@ -3,9 +3,9 @@ from customerchurn.logging.logger import logging
 
 from customerchurn.components.data_ingestion import DataIngestion
 from customerchurn.components.data_validation import DataValidation
-#from customerchurn.components.data_transformation import DataTransformation
+from customerchurn.components.data_trasnformation import DataTransformation
 
-from customerchurn.entity.config_entity import DataIngestionConfig,DataValidationConfig
+from customerchurn.entity.config_entity import DataIngestionConfig,DataValidationConfig,DataTransformationConfig
 from customerchurn.entity.config_entity import TrainingPipelineConfig
 
 #from customerchurn.components.model_trainer import ModelTrainer
@@ -27,7 +27,14 @@ if __name__ =='__main__':
         logging.info("Initiate the Data Validation")
         data_validation_artifact = data_validation.initial_data_validation()
         logging.info("data validation completed")
-        print(data_validation_artifact) 
+        print(data_validation_artifact)
+        
+        data_transformation_config = DataTransformationConfig(trainingpipelineconfig)
+        logging.info("Data transformation start")
+        data_transformation = DataTransformation(data_validation_artifact,data_transformation_config)
+        data_transformation_artifact = data_transformation.initiate_data_transformation()
+        print(data_transformation_artifact)
+        logging.info("Data transformation completed")
                
     except Exception as e:
         raise CustomerChurnException(e,sys)

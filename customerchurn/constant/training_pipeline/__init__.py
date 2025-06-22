@@ -5,7 +5,7 @@ import os
 '''
 Defining common constant variable for training pipeline
 '''
-TARGET_COLUMN = "Existed" # get from raw data columns
+TARGET_COLUMN = "Exited" # get from raw data columns
 PIPELINE_NAME:str = "Churndata"
 ARTIFACT_DIR:str = "Artifacts"
 FILE_NAME:str = "Churn_Modelling.csv"
