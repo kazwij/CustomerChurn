@@ -18,8 +18,21 @@ class DataValidationArtifact:
 @dataclass
 class DataTransformationArtifact:
     transformation_object_file_path:str
-    transformation_train_file_path:str
-    transformation_test_file_path:str
+    
+
+@dataclass
+class ClassifactionMetricArtifact:
+    f1_score :float
+    precission_score:float
+    recall_score:float
+
+@dataclass
+class ModelTrainerArtifact:
+    trained_model_file_path:str
+    train_metric_artifact:ClassifactionMetricArtifact
+    test_metric_artifact : ClassifactionMetricArtifact
+    
+    
 
 
 

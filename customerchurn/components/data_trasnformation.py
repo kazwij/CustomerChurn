@@ -8,7 +8,7 @@ from sklearn.preprocessing import LabelEncoder,StandardScaler,RobustScaler,MinMa
 from sklearn.compose import ColumnTransformer
 
 from customerchurn.constant.training_pipeline import TARGET_COLUMN
-from customerchurn.constant.training_pipeline import DATA_TRANSFORMATION_IMPUTER_PARAMS
+#from customerchurn.constant.training_pipeline import DATA_TRANSFORMATION_IMPUTER_PARAMS
 
 from customerchurn.entity.artifact_entity import DataTransformationArtifact,DataValidationArtifact
 from customerchurn.entity.config_entity import DataTransformationConfig
@@ -102,29 +102,20 @@ class DataTransformation:
             cat_columns  = input_feature_train_df.select_dtypes(include=['object','category']).columns.tolist()
             
             preprocessor = self.get_data_transformer_object(num_columns=num_columns,cat_columns=cat_columns)
-            
-            preprocessor_object = preprocessor.fit(input_feature_train_df)
-            transformed_input_train_features =  preprocessor_object.transform(input_feature_train_df)
-            transformed_input_test_features =  preprocessor_object.transform(input_feature_test_df)
-            
-            train_arr = np.c_[transformed_input_train_features,np.array(target_feature_train_df)]
-            test_arr = np.c_[transformed_input_test_features,np.array(target_feature_test_df)]
-            
-            #save numpy array data
-            save_numpy_array_data(self.data_transformation_config.transformed_train_file_path,array=train_arr)
-            save_numpy_array_data(self.data_transformation_config.transformed_test_file_path,array=test_arr)
-            save_numpy_array_data(self.data_transformation_config.transformed_object_file_path,preprocessor_object)
-             
-
-            save_object("final_model/preporcessor.pkl",preprocessor_object)
-            
+           
+           
+           #####MY CODE GOES HERE
+           ##saving non fitted preprocessor object
+           
+            save_object(self.data_transformation_config.transformed_object_file_path,preprocessor)
+           
+           ###END
+           
             #preparing artifact
             
             data_trasformation_artifact = DataTransformationArtifact(
                 transformation_object_file_path=self.data_transformation_config.transformed_object_file_path,
-                transformation_train_file_path=self.data_transformation_config.transformed_train_file_path,
-                transformation_test_file_path=self.data_transformation_config.transformed_test_file_path
-                
+               
             )
             
             return data_trasformation_artifact
