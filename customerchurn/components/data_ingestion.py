@@ -5,6 +5,7 @@ from customerchurn.entity.artifact_entity import DataIngestionArtifact
 #configuration of the data Ingestion Config
 
 from customerchurn.entity.config_entity import DataIngestionConfig
+from customerchurn.constant.training_pipeline import TARGET_COLUMN
 
 import os
 import sys
@@ -98,7 +99,9 @@ class DataIngestion:
     def split_data_as_train_test(self,dataframe:pd.DataFrame):
         try:
             train_set,test_set = train_test_split(
-                dataframe,test_size=self.data_ingestion_config.train_test_split_ratio
+                dataframe,test_size=self.data_ingestion_config.train_test_split_ratio,
+                random_state=42,
+                stratify=dataframe[TARGET_COLUMN]
 
             )
             logging.info("Preformed train test split on the dataframe")

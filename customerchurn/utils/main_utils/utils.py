@@ -8,7 +8,7 @@ import pickle
 from sklearn.pipeline import Pipeline
 
 
-from sklearn.metrics import recall_score,precision_score,f1_score
+from sklearn.metrics import recall_score,precision_score,f1_score,accuracy_score
 from sklearn.model_selection import GridSearchCV
 
 
@@ -103,17 +103,18 @@ def evaluate_model(X_train,y_train,X_test,y_test,models:dict,param:dict,preproce
             y_train_pred = best_pipeline.predict(X_train)
             y_test_pred = best_pipeline.predict(X_test)
 
-            train_score = recall_score(y_train, y_train_pred)
-            test_score = recall_score(y_test, y_test_pred)
+            train_score = accuracy_score (y_train, y_train_pred)
+            test_score = accuracy_score(y_test, y_test_pred)
 
+            
+            logging.info(f"{model_name} — Train Recall: {train_score:.4f}, Test Recall: {test_score:.4f}")
             report[model_name] = test_score
-
             if test_score > best_score:
                 best_score = test_score
                 best_model = best_pipeline
                 best_model_name = model_name
-                logging.info(f"Best model: {best_model_name} with Test Recall: {best_score:.4f}")
-        
+                
+            
         logging.info(f"Best model selected: {best_model_name} with final Test Recall: {best_score:.4f}")
 
         return report, best_model

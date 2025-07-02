@@ -35,7 +35,13 @@ class DataTransformation:
         except Exception as e:
             raise CustomerChurnException(e,sys)
     
-    def get_data_transformer_object(self,num_columns:list,cat_columns:list)->Pipeline:
+    def get_data_transformer_object(self,
+                                    standarScaler_col:list,
+                                    robustScaler_col:list,
+                                    minmaxScaler_col:list,
+                                    cat_col:list
+                                    
+                                    )->Pipeline:
         '''
         this fuction will preform following preprocessing steps 
         01. handling missing values - use SimpleImputer with strategry - most_frequenct
@@ -48,29 +54,40 @@ class DataTransformation:
         
         try:
             
-            #seperate numerical and categorical columns 
+            #
+            standarScaler_col = ['CreditScore'] # has normal distribution and mild outliers. 
+            robustScaler_col = ['Age','Balance','EstimatedSalary'] # skewed distibusions high outliers, fiarly uniform distributions
+            minmaxScaler_col = ['Tenure','NumOfProducts'] 
             
-            
-            #Pipeline
-            numeric_transformer = Pipeline(
-                steps=[
-                  ('imputer',SimpleImputer(strategy='median')),
-                  ('scaler',StandardScaler())  
-                    
-                ])
-                
-            categorical_transformer = Pipeline([
-                    ('imputer',SimpleImputer(strategy='most_frequent')),
-                    ('encoder',OneHotEncoder(handle_unknown='ignore'))
-                    
-                ])
-            
-            preprocessor = ColumnTransformer(transformers=[
-                ('num',numeric_transformer,num_columns),
-                ('cat',categorical_transformer,cat_columns)
-                
+            # Create pipelines
+            standard_pipeline = Pipeline([
+                ('imputer', SimpleImputer(strategy='median')),
+                ('scaler', StandardScaler())
             ])
-            
+
+            robust_pipeline = Pipeline([
+                ('imputer', SimpleImputer(strategy='median')),
+                ('scaler', RobustScaler())
+            ])
+
+            minmax_pipeline = Pipeline([
+                ('imputer', SimpleImputer(strategy='median')),
+                ('scaler', MinMaxScaler())
+            ])
+
+            categorical_pipeline = Pipeline([
+                ('imputer', SimpleImputer(strategy='most_frequent')),
+                ('encoder', OneHotEncoder(drop='first',handle_unknown='ignore'))
+            ])
+
+            # ColumnTransformer
+            preprocessor = ColumnTransformer(transformers=[
+                ('standard', standard_pipeline, standarScaler_col),
+                ('robust', robust_pipeline, robustScaler_col),
+                ('minmax', minmax_pipeline, minmaxScaler_col),
+                ('cat', categorical_pipeline, cat_col)
+            ])
+
             return preprocessor
             
             
@@ -98,10 +115,17 @@ class DataTransformation:
             target_feature_test_df = test_df[TARGET_COLUMN]
             
             #seperate numurical columns and categorical columns fron train_df and convert to list
-            num_columns = input_feature_train_df.select_dtypes(include=['number']).columns.tolist()
-            cat_columns  = input_feature_train_df.select_dtypes(include=['object','category']).columns.tolist()
+            standard_columns = ['CreditScore']
+            robust_columns = ['Age', 'Balance', 'EstimatedSalary']
+            minmax_columns = ['Tenure', 'NumOfProducts']
+            cat_col  = input_feature_train_df.select_dtypes(include=['object','category']).columns.tolist()
             
-            preprocessor = self.get_data_transformer_object(num_columns=num_columns,cat_columns=cat_columns)
+            preprocessor = self.get_data_transformer_object(
+                        standarScaler_col=standard_columns,
+                        robustScaler_col=robust_columns,
+                        minmaxScaler_col=minmax_columns,
+                        cat_col=cat_col
+                        )
            
            
            #####MY CODE GOES HERE
