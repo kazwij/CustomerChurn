@@ -13,3 +13,4 @@ pymongo
 pymongo[srv]==3.12
 pyaml
 mlflow
+imbalanced-learn

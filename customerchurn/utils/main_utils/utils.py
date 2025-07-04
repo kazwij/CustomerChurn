@@ -103,8 +103,8 @@ def evaluate_model(X_train,y_train,X_test,y_test,models:dict,param:dict,preproce
             y_train_pred = best_pipeline.predict(X_train)
             y_test_pred = best_pipeline.predict(X_test)
 
-            train_score = accuracy_score (y_train, y_train_pred)
-            test_score = accuracy_score(y_test, y_test_pred)
+            train_score = recall_score(y_train, y_train_pred)
+            test_score = recall_score(y_test, y_test_pred)
 
             
             logging.info(f"{model_name} — Train Recall: {train_score:.4f}, Test Recall: {test_score:.4f}")

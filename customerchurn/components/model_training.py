@@ -24,6 +24,8 @@ from sklearn.ensemble import(
     
 )
 from sklearn.pipeline import Pipeline
+from imblearn.over_sampling import SMOTE
+
 
 class ModelTrainer:
     
@@ -79,18 +81,29 @@ class ModelTrainer:
             
             preprocessor = load_object(self.data_transformation_artifact.transformation_object_file_path)
 
+            #preform preprocesses 
+            X_train_transformed = preprocessor.fit_transform(X_train)
+            X_test_transformed = preprocessor.transform(X_test)
+            
+            #apply SMOTE
+            
+            smote = SMOTE(random_state=42)
+            X_train_balanced,y_train_balanced = smote.fit_resample(X_train_transformed,y_train)
+            
+            
+            
             model_report, best_model_pipeline = evaluate_model(
-                X_train=X_train,
-                y_train=y_train,
-                X_test=X_test,
+                X_train=X_train_balanced,
+                y_train=y_train_balanced,
+                X_test=X_test_transformed,
                 y_test=y_test,
                 models=models,
                 param=params,
-                preprocessor=preprocessor
+                preprocessor=None
             )
 
-            y_train_pred = best_model_pipeline.predict(X_train)
-            y_test_pred = best_model_pipeline.predict(X_test)
+            y_train_pred = best_model_pipeline.predict(X_train_transformed)
+            y_test_pred = best_model_pipeline.predict(X_test_transformed)
             
             train_metrics = get_classification_score(y_true=y_train, y_pred=y_train_pred)
             test_metrics = get_classification_score(y_true=y_test, y_pred=y_test_pred)
